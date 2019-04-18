@@ -4,10 +4,10 @@ A work-in-progress collection of utilities for creating Burp extensions in
 
 ## Usage
 1. Add it as a Python Burp module and use `from burputils import *`.
-    For more info see:
+    * For more info see:
     https://parsiya.net/blog/2018-12-19-python-utility-modules-for-burp-extensions/
 2. Copy the file to the same path as your extension and use `from burputils import *`.
-    * The second file does not have to be loaded in Burp, it just needs to be in the same path.
+    * `burputils.py` does not have to be loaded in Burp, just leave it in the same path.
 3. Copy/paste used code into your extension.
 
 ### Which Option Should I Use?

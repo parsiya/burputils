@@ -23,8 +23,11 @@ class BurpExtender(IBurpExtender, IHttpListener):
         # self.utilss = callbacks.getHelpers()
         self.utils = BurpUtils(callbacks.getHelpers())
 
-        # enable for burp-exceptions
-        sys.stdout = callbacks.getStdout()
+        # support for burp-exceptions
+        try:
+            sys.stdout = callbacks.getStdout()
+        except:
+            pass
         
         # set our extension name
         callbacks.setExtensionName("Test Helpers")
@@ -123,7 +126,7 @@ class BurpExtender(IBurpExtender, IHttpListener):
         modifiedmsg = self.utils.burpHelper.buildHttpMessage(respHeaderFromUtils, bodyBytes)
 
         # set modified message response
-        messageInfo.setResponse(modifiedmsg)
+        self.utils.setRequestResponse(messageIsRequest, modifiedmsg, messageInfo)
 
         # this should be reflected in response tab
 
