@@ -21,16 +21,14 @@ class BurpUtils:
     """Helpers for Burp Python extensions"""
 
     def __init__(self, callbackHelper):
-        """
-        Set IExtensionHelpers
+        """Set IExtensionHelpers
         
         Set with callbacks.getHelpers() in registerExtenderCallbacks.
         """
         self.burpHelper = callbackHelper
     
     def getInfoFromBytes(self, isRequest, rawBytes):
-        """
-        Process request or response from raw bytes.
+        """Process request or response from raw bytes.
 
         Returns IRequestInfo or IResponseInfo respectively.
         
@@ -43,8 +41,7 @@ class BurpUtils:
             return self.burpHelper.analyzeResponse(rawBytes)
     
     def getInfo(self, isRequest, requestResponse):
-        """
-        Process request or response from IHttpRequestResponse.
+        """Process request or response from IHttpRequestResponse.
 
         Returns IRequestInfo or IResponseInfo respectively.
         This method is preferable to getInfoFromBytes.
@@ -76,8 +73,7 @@ class BurpUtils:
         return hdr
     
     def setRequestResponse(self, isRequest, message, requestResponse):
-        """
-        Set the request or response for an IHttpRequestResponse object.
+        """Set the request or response for an IHttpRequestResponse object.
         
         Args:
         
@@ -94,8 +90,7 @@ class BurpUtils:
 
 
 class Headers:
-    """
-    Represents HTTP headers.
+    """Represents HTTP headers.
 
     Burp returns headers as an ArrayList<string>, this class converts it into
     a dict(list).
@@ -114,8 +109,7 @@ class Headers:
         self._first = ""
 
     def get(self, header):
-        """
-        Returns a list containing the header's value(s).
+        """Returns a list containing the header's value(s).
         
         Returns None if header does not exist in _hdr.
         """
@@ -124,8 +118,7 @@ class Headers:
         return self._hdr.get(header, None)
     
     def add(self, header, value):
-        """
-        Adds header:value to _hdr.
+        """Adds header:value to _hdr.
 
         If header exists, value is added to the list under that header.
         """
@@ -139,8 +132,7 @@ class Headers:
         temp = self._hdr.pop(header, None)
     
     def overwrite(self, header, value):
-        """
-        Overwrites the value of a header.
+        """Overwrites the value of a header.
 
         If the header does not exist, it will be added.
         If you want duplicate headers, use add instead.
@@ -167,8 +159,7 @@ class Headers:
                 self.add(spl[0], None)
 
     def exportRaw(self):
-        """
-        Serializes the header back to the Burp format.
+        """Serializes the header back to the Burp format.
         Returns a java.util.ArrayList(string).
 
         A string list with one header on each line.
