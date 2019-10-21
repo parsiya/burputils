@@ -29,11 +29,17 @@ class BurpUtils:
     
     def getInfoFromBytes(self, isRequest, rawBytes):
         """Process request or response from raw bytes.
-
         Returns IRequestInfo or IResponseInfo respectively.
-        
-        Use getInfo instead if you have access to an IHttpRequestResponse object.
-        It allows you to use all methods like IRequestInfo.getUrl() later.
+
+        Use getInfo instead if you have access to an IHttpRequestResponse
+        object. It allows you to use all methods like IRequestInfo.getUrl()
+        later.
+
+        Args:
+
+        * isRequest (bool): Set to true if rawBytes is a request. false if it's a
+            response.
+        * rawBytes (byte[]): Raw bytes containing the request or response.
         """
         if isRequest:
             return self.burpHelper.analyzeRequest(rawBytes)
@@ -42,9 +48,16 @@ class BurpUtils:
     
     def getInfo(self, isRequest, requestResponse):
         """Process request or response from IHttpRequestResponse.
-
         Returns IRequestInfo or IResponseInfo respectively.
+
         This method is preferable to getInfoFromBytes.
+
+        Args:
+
+        * isRequest (bool): Set to true if rawBytes is a request. false if it's
+            a response.
+        * requestResponse (IHttpRequestResponse): Object containing the request
+            or the response.
         """
         if isRequest:
             return self.burpHelper.analyzeRequest(requestResponse)
@@ -52,12 +65,29 @@ class BurpUtils:
             return self.burpHelper.analyzeResponse(requestResponse.getResponse())
     
     def getBodyFromBytes(self, isRequest, rawBytes):
-        """Returns body bytes from a reqest or response bytes."""
+        """Extracts the body bytes from a request or response raw bytes.
+        Returns a byte[] containing the body of the request or response.
+        
+        Args:
+
+        * isRequest (bool): Set to true if rawBytes is a request. false if it's a
+            response.
+        * rawBytes (byte[]): Raw bytes containing the request or response.
+        """
         info = self.getInfoFromBytes(isRequest, rawBytes)
         return rawBytes[info.getBodyOffset()]
     
     def getBody(self, isRequest, requestResponse):
-        """Returns body bytes from an IHttpRequestResponse object."""
+        """Extracts the body bytes of an IHttpRequestResponse object.
+        Returns a byte[] containing the body of the request or response.
+        
+        Args:
+
+        * isRequest (bool): Set to true if rawBytes is a request. false if it's a
+            response.
+        * requestResponse (IHttpRequestResponse): Object containing the request
+            or the response.
+        """
         info = self.getInfo(isRequest, requestResponse)
 
         if isRequest:
@@ -66,23 +96,33 @@ class BurpUtils:
             return requestResponse.getResponse()[info.getBodyOffset():]
 
     def getHeaders(self, info):
-        """Returns request/response headers in a Headers object."""
+        """Extract the headers from an IRequestInfo or IResponseInfo object.
+        Returns a Headers object with the headers.
+
+        Args:
+
+        * info (IRequestInfo or IResponseInfo): Request info. Use the output
+            from getInfo or getInfoFromBytes.
+        """
         hdr = Headers()
+        # this is IRequestInfo.getHeaders() or IResponseInfo.getHeaders() from Burp
         rawHdr = info.getHeaders()
         hdr.importRaw(rawHdr)
         return hdr
     
     def setRequestResponse(self, isRequest, message, requestResponse):
         """Set the request or response for an IHttpRequestResponse object.
-        
+        Does not return anything but requestResponse is modified.
+
         Args:
-        
+
         * isRequest (bool): True if message is a request. False for response.
-        * message (byte[]): Raw bytes containing the request or response.
-        Usually comes from buildHttpMessage.
-        * requestResponse (IHttpRequestResponse): RequestResponse to be modified.
+        * message (byte[]): Raw bytes of the request or response. Usually comes
+            from buildHttpMessage.
+        * requestResponse (IHttpRequestResponse): RequestResponse to be
+            modified.
         """
-        # If isRequest is True, use setRequest. Otherwise, setResponse.
+        # if isRequest is True, use setRequest. Otherwise, setResponse.
         if isRequest:
             requestResponse.setRequest(message)
         else:
@@ -95,8 +135,8 @@ class Headers:
     Burp returns headers as an ArrayList<string>, this class converts it into
     a dict(list).
     
-    Note: This class treates headers as case-sensitive and does not check for
-    duplicate values. Duplicate headers will be repeated
+    Note: This class treats headers as case-sensitive and does not check for
+    duplicate values. Duplicate headers will be repeated in the list.
     """
 
     def __init__(self):
@@ -109,9 +149,11 @@ class Headers:
         self._first = ""
 
     def get(self, header):
-        """Returns a list containing the header's value(s).
-        
-        Returns None if header does not exist in _hdr.
+        """Returns a list containing the header and its value(s) or None if header does not exist in _hdr.
+
+        Args:
+
+        * header (string): Header name.
         """
         # this is functionally equivalent to "self._hdr[header]" but we can
         # change the default return value from None later if needed (e.g. to "").
@@ -121,11 +163,21 @@ class Headers:
         """Adds header:value to _hdr.
 
         If header exists, value is added to the list under that header.
+
+        Args:
+
+        * header (string): Header name.
+        * value (string): Header value.
         """
         self._hdr[header].append(value)
         
     def remove(self, header):
-        """Removes header from _hdr."""
+        """Removes header from _hdr.
+        
+        Args:
+
+        * header (string): Header name.
+        """
         # pop removes header from the dictionary and returns its value.
         # providing the default value None, prevents exceptions if header does not
         # exist in the dictionary.
@@ -134,8 +186,13 @@ class Headers:
     def overwrite(self, header, value):
         """Overwrites the value of a header.
 
-        If the header does not exist, it will be added.
-        If you want duplicate headers, use add instead.
+        * If the header does not exist, it will be added.
+        * If you want duplicate headers, use add instead.
+
+        Args:
+
+        * header (string): Header name.
+        * value (string): Header value.
         """
         # if it exists, remove it
         if header in self._hdr:
@@ -145,7 +202,14 @@ class Headers:
         self.add(header, value)
 
     def importRaw(self, rawHeader):
-        """Deserializes the Burp header list into a Headers object."""
+        """Deserializes the Burp header list into a Headers object.
+        Returns a Headers object.
+        
+        Args:
+
+        * rawHeader: java.util.ArrayList(string) containing the headers.
+            Output of IRequestInfo.getHeaders() or IResponseInfo.getHeaders().
+        """
         # set the first line, e.g. "GET /whatever HTTP/1.1".
         self._first = rawHeader[0]
         # set the rest
@@ -159,11 +223,13 @@ class Headers:
                 self.add(spl[0], None)
 
     def exportRaw(self):
-        """Serializes the header back to the Burp format.
+        """Serializes the Headers object back to the Burp format.
         Returns a java.util.ArrayList(string).
 
-        A string list with one header on each line.
-        Adds multiple values as duplicate headers.
+        The returned string list has one header on each line including
+        duplicate headers.
+
+        This can be used in Burp's IExtensionHelpers.buildHttpMessage.
         """
         import java.util.ArrayList as ArrayList
         lst = ArrayList()
