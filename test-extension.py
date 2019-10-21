@@ -23,7 +23,7 @@ class BurpExtender(IBurpExtender, IHttpListener):
     # implement IBurpExtender
 
     # set everything up
-    def	registerExtenderCallbacks(self, callbacks):
+    def registerExtenderCallbacks(self, callbacks):
         # obtain an extension helpers object
         # self.helpers = callbacks.getHelpers()
         self.utils = BurpUtils(callbacks.getHelpers())

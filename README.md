@@ -5,9 +5,9 @@ Python. **The API is very much subject to change.**
 Currently, it has helper methods to manipulate requests/responses and headers.
 
 - [Adding to Extension](#adding-to-extension)
-  - [Which Option Should I Use?](#which-option-should-i-use)
-  - [Why Do You Use IExtensionHelpers During Construction?](#why-do-you-use-iextensionhelpers-during-construction)
-  - [Burp-Exceptions](#burp-exceptions)
+    - [Which Option Should I Use?](#which-option-should-i-use)
+    - [Why Do You Use IExtensionHelpers During Construction?](#why-do-you-use-iextensionhelpers-during-construction)
+    - [Burp-Exceptions](#burp-exceptions)
 - [Usage](#usage)
 - [I Found a Bug!](#i-found-a-bug)
 - [License](#license)
@@ -42,7 +42,7 @@ BurpUtils does not need it but you should use it for extension development:
 Create an object inside `registerExtenderCallbacks` and assign it to the tab.
 
 ``` python
-def	registerExtenderCallbacks(self, callbacks):
+def registerExtenderCallbacks(self, callbacks):
     # obtain an extension helpers object
     # self.helpers = callbacks.getHelpers()
     self.utils = BurpUtils(callbacks.getHelpers())
