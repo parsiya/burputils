@@ -13,11 +13,12 @@ Currently, it has helper methods to manipulate requests/responses and headers.
 - [License](#license)
 
 ## Adding to Extension
-1. Add it as a Python Burp module and use `from burputils import *`.
+1. Add it as a Python Burp module and use `from burputils import BurpUtils`.
     * For more info see:
     https://parsiya.net/blog/2018-12-19-python-utility-modules-for-burp-extensions/
-2. Copy the file to the same path as your extension and use `from burputils import *`.
-    * `burputils.py` does not have to be loaded in Burp, just leave it in the same path.
+2. Copy the files to the same path as your extension and use `from burputils import BurpUtils`.
+    * These new files does not have to be loaded in Burp in Burp modules, just
+      leave them in the same path.
 3. Copy/paste used code into your extension.
 
 ### Which Option Should I Use?
@@ -96,4 +97,7 @@ headers to responses before they hit HTTP History.
 Bugs in my code? Never!!1! Please make an issue.
 
 ## License
-Now that is a can of worms. GPLv3, see [LICENSE](LICENSE) for details.
+MIT, see [LICENSE](LICENSE) for details.
+
+The project was initially licensed under GPLv3. As the sole contributor to the
+project, I switched to MIT.

@@ -1,16 +1,15 @@
 """
-    Burp utility module for Python Burp extensions.
-    Author: Parsia Hakimian
-    License: GPLv3
+    Burp utility module for Python Burp extensions. Author: Parsia Hakimian
+    License: MIT
 
     # Usage
     1. Add it as a Python Burp module and use `from burputils import BurpUtils`.
         For more info see:
         https://parsiya.net/blog/2018-12-19-python-utility-modules-for-burp-extensions/
-    2. Copy the file(s) to the same path as your extension and use 
-        `from burputils import BurpUtils`.
-        * The second file does not have to be loaded in Burp, it just needs to 
-            be in the same path.
+    2. Copy the files to the same path as your extension and use `from burputils
+        import BurpUtils`.
+        * These extra files do not have to be loaded in Burp, they just needs to
+          be in the same path.
     3. Copy/paste used code into your extension.
 
     Please see README for details.

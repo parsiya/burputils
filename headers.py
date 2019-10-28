@@ -1,3 +1,11 @@
+"""
+    Header class for Burp Utils.
+    Author: Parsia Hakimian
+    License: MIT
+
+    Please see README for details.
+"""
+
 class Headers:
     """Represents HTTP headers.
 
