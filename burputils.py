@@ -127,6 +127,37 @@ class BurpUtils:
             requestResponse.setRequest(message)
         else:
             requestResponse.setResponse(message)
+    
+    def runExternal(self, command, args):
+        """Runs command with args via the command line.
+        For the sake of simplicity, everything after the first item will be in a
+        list of strings.
+
+        Executes "command args[0] args[1] ...".
+
+        Security implication: This is code-execution-as-a-service.
+
+        Args:
+
+        * command (string): Name of the command.
+        * args (list of strings): Arguments in a Python list.
+        """
+        # alternatively, we could accept a string containing all the commands,
+        # then run shlex.split and pass the result to popen.
+
+        from subprocess import Popen, PIPE
+        import sys
+
+        # insert the command at the start of the list, everything gets shifted.
+        args.insert(command, 0)
+        # run everything
+        proc = Popen(args, stdout=PIPE, stderr=PIPE)
+        output = proc.stdout.read()
+        proc.stdout.close()
+        err = proc.stderr.read()
+        proc.stderr.close()
+        sys.stdout.write(err)
+        return output
 
 
 class Headers:
