@@ -158,3 +158,36 @@ class BurpUtils:
         proc.stderr.close()
         sys.stdout.write(err)
         return output
+    
+    def createHTTPMessage(self, headers, bodyBytes):
+        """Create an HTTP message using IExtensionHelpers.buildHttpMessage with
+        the headers in a Header object instead of a raw list.
+        Returns a byte[] containing the HTTP message.
+
+        Args:
+
+        * headers (Header): Request headers in a Header object.
+        * bodyBytes (byte[]): Raw bytes containing the body of the request.
+        """
+        return self.burpHelper.buildHttpMessage(headers.exportRaw(), bodyBytes)
+
+    # IExtensionHelpers wrappers
+    def base64Decode(self, base64Data):
+        """Wrapper for IExtensionHelpers.base64Decode.
+        Returns the decoded data.
+
+        Args:
+
+        * base64Data (byte[] or string): Base64 encoded data.
+        """
+        return self.burpHelper.base64Decode(base64Data)
+    
+    def base64Encode(self, data):
+        """Wrapper for IExtensionHelpers.base64Encode.
+        Returns the base64 encoding of input.
+
+        Args:
+
+        * data (byte[] or string): Data to be encoded.
+        """
+        return self.burpHelper.base64Encode(data)
