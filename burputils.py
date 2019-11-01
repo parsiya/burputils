@@ -159,3 +159,24 @@ class BurpUtils:
         proc.stderr.close()
         sys.stdout.write(err)
         return output
+    
+    def setHighlight(self, color, requestResponse):
+        """Set the highlight color for requestResponse in Burp's HTTP History.
+        Returns the modified requestResponse.
+
+        Args:
+
+        * color (string): Highlight color.
+            One of: red, orange, yellow, green, cyan, blue, pink, magenta, gray
+        * requestResponse (IHttpRequestResponse) RequestResponse to be
+            modified.
+        """
+        validColors = ["red","orange","yellow","green","cyan","blue","pink","magenta","gray"]
+        # convert the input to lowercase.
+        color = color.lower()
+        if color not in validColors:
+            color = None
+            return
+        
+        requestResponse.setHighlight(color)
+        return requestResponse

@@ -85,7 +85,7 @@ class BurpExtender(IBurpExtender, IHttpListener):
             header_color = header_color[0]
         # debugging
         # print "***** header_color", header_color, "type: ", type(header_color)
-        messageInfo.setHighlight(header_color)
+        messageInfo = messageInfo.setHighlight(header_color)
 
         return
 
