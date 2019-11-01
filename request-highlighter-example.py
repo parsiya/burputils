@@ -72,7 +72,7 @@ class BurpExtender(IBurpExtender, IHttpListener):
         modifiedmsg = self.utils.burpHelper.buildHttpMessage(utilHeaders.exportRaw(), bodyBytes)
 
         # set modified message response
-        self.utils.setRequestResponse(messageIsRequest, modifiedmsg, messageInfo)
+        modifiedmsg = self.utils.setRequestResponse(messageIsRequest, modifiedmsg, messageInfo)
 
         # now we can highlight based on color
         # read the value of "color" header if any.

@@ -92,7 +92,7 @@ class BurpExtender(IBurpExtender, IHttpListener):
         modifiedmsg = self.utils.burpHelper.buildHttpMessage(respHeaderFromUtils, bodyBytes)
 
         # set modified message response
-        self.utils.setRequestResponse(messageIsRequest, modifiedmsg, messageInfo)
+        modifiedmsg = self.utils.setRequestResponse(messageIsRequest, modifiedmsg, messageInfo)
 
         # this should be reflected in response tab
 

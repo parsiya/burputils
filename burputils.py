@@ -112,7 +112,7 @@ class BurpUtils:
     
     def setRequestResponse(self, isRequest, message, requestResponse):
         """Set the request or response for an IHttpRequestResponse object.
-        Does not return anything but requestResponse is modified.
+        Returns the modified requestResponse.
 
         Args:
 
@@ -127,6 +127,7 @@ class BurpUtils:
             requestResponse.setRequest(message)
         else:
             requestResponse.setResponse(message)
+        return message
     
     def runExternal(self, command, args):
         """Runs command with args via the command line.
