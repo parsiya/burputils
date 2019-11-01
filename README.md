@@ -1,38 +1,44 @@
 # Burp Utils <!-- omit in toc -->
 A work-in-progress collection of utilities for creating Burp extensions in
-Python. **The API is very much subject to change.**
+Python. **The API is very much subject to change and README might be outdated.**
 
 Currently, it has helper methods to manipulate requests/responses and headers.
 
-- [Adding to Extension](#adding-to-extension)
+- [Adding BurpUtils to your Extension](#adding-burputils-to-your-extension)
     - [Which Option Should I Use?](#which-option-should-i-use)
-    - [Why Do You Use IExtensionHelpers During Construction?](#why-do-you-use-iextensionhelpers-during-construction)
+    - [Why Does It Use IExtensionHelpers During Construction?](#why-does-it-use-iextensionhelpers-during-construction)
     - [Burp-Exceptions](#burp-exceptions)
 - [Usage](#usage)
-- [I Found a Bug!](#i-found-a-bug)
+- [Examples](#examples)
+- [I Found a Bug or I Would Like a Feature](#i-found-a-bug-or-i-would-like-a-feature)
 - [License](#license)
 
-## Adding to Extension
-1. Add it as a Python Burp module and use `from burputils import BurpUtils`.
-    * For more info see:
-    https://parsiya.net/blog/2018-12-19-python-utility-modules-for-burp-extensions/
-2. Copy the files to the same path as your extension and use `from burputils import BurpUtils`.
-    * These new files does not have to be loaded in Burp in Burp modules, just
-      leave them in the same path.
+## Adding BurpUtils to your Extension
+There are several ways to use BurpUtils
+
+1. Burp Module:
+    1. Clone this repository in the [Burp Python modules directory][python-burp-module].
+        * For more info see: https://parsiya.net/blog/2018-12-19-python-utility-modules-for-burp-extensions/
+    2. The directory should look like `burp-module-directory\burputils`.
+    3. Import it with `from burputils import BurpUtils`.
+2. Local Module:
+    1. Copy the files in the top path (e.g., `burputils.py`, `headers.py` etc.) to your extensions directory.
+    2. Import it with `from burputils import BurpUtils`.
 3. Copy/paste used code into your extension.
+    1. Import it however.
 
 ### Which Option Should I Use?
-I suggest option 1 for development and 2 for release.
 
-If you are only using a few functions, you can copy/paste them at the end of
-your extension file and avoid having two files.
+* Option 1: If you want your extension to only contain your own code.
+    * The test extensions use this approach.
+* Option 2: If you want your extension to be self-sufficient.
+* Option 3: Uf you are only using a few utility functions.
 
-### Why Do You Use IExtensionHelpers During Construction?
+### Why Does It Use IExtensionHelpers During Construction?
 Burp only allows you to get an instance of that class through callbacks.
 
-Inside your extension, you can either use it directly by setting it manually 
-or use helpers via `burpUtilsObject.burpHelper`:
-* `utils.burpHelper.buildHttpMessage`
+By using it during constructions, both BurpUtils and your extension can use
+them like `utils.burpHelper.buildHttpMessage`.
 
 ### Burp-Exceptions
 BurpUtils does not need it but you should use it for extension development:
@@ -40,7 +46,8 @@ BurpUtils does not need it but you should use it for extension development:
 * https://github.com/securityMB/burp-exceptions
 
 ## Usage
-Create an object inside `registerExtenderCallbacks` and assign it to the tab.
+Create an object inside `registerExtenderCallbacks` and assign it to the
+extension.
 
 ``` python
 def registerExtenderCallbacks(self, callbacks):
@@ -90,14 +97,24 @@ def processHttpMessage(self, toolFlag, messageIsRequest, messageInfo):
     return
 ```
 
-See [test-extension](test-extension.py) for a complete extension. It adds some
-headers to responses before they hit HTTP History.
+## Examples
+See the extensions in [test-extensions](test-extensions):
 
-## I Found a Bug!
-Bugs in my code? Never!!1! Please make an issue.
+* [test-extensions/headers-test.py](test-extensions/headers-test.py) for a
+  extension that adds some headers to responses before their hit Burp's HTTP
+  history.
+* [test-extensions/request-highlighter-example.py](test-extensions/request-highlighter-example.py)
+  adds a random response header to each request and then highlights them in HTTP
+  History accordingly.
+
+## I Found a Bug or I Would Like a Feature
+Bugs in my code? Never!!1! Please make an issue in both cases.
 
 ## License
 MIT, see [LICENSE](LICENSE) for details.
 
 The project was initially licensed under GPLv3. As the sole contributor to the
-project, I switched to MIT.
+project, I switched to MIT. Complying with all GPL requirements was too hard.
+
+<!-- Links -->
+[python-burp-module]: https://portswigger.net/burp/documentation/desktop/tools/extender#python-environment
