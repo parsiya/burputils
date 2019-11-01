@@ -26,7 +26,8 @@ class Headers:
         self._first = ""
 
     def get(self, header):
-        """Returns a list containing the header and its value(s) or None if header does not exist in _hdr.
+        """Returns a *list* containing the header and its value(s) or None if
+        the header does not exist in _hdr.
 
         Args:
 
