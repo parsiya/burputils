@@ -180,3 +180,12 @@ class BurpUtils:
         
         requestResponse.setHighlight(color)
         return requestResponse
+    
+    def bytesToString(self, data):
+        # type: (bytearray) -> (str)
+        """Converts a byte[] to string.
+        
+        Args:
+        
+        * data (bytearray): Byte array to be converted to string."""
+        return self.burpHelper.bytesToString(data)
