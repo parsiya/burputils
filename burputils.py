@@ -189,3 +189,15 @@ class BurpUtils:
         
         * data (bytearray): Byte array to be converted to string."""
         return self.burpHelper.bytesToString(data)
+
+    def getPath(self, reqResp):
+        # type: (IHttpRequestResponse) -> (str)
+        """Analyzes a byte[] of a request and returns the path.
+        
+        Args:
+        
+        * reqResp (IHttpRequestResponse): The RequestResponse with the path."""
+        if reqResp is None:
+            return ""
+        info = self.burpHelper.analyzeRequest(reqResp)
+        return info.getUrl().getFile()
