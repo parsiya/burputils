@@ -6,7 +6,7 @@ Currently, it has helper methods to manipulate requests/responses and headers.
 
 - [Adding BurpUtils to your Extension](#adding-burputils-to-your-extension)
     - [Which Option Should I Use?](#which-option-should-i-use)
-    - [Why Does It Use IExtensionHelpers During Construction?](#why-does-it-use-iextensionhelpers-during-construction)
+    - [Why Does It Use IBurpExtenderCallbacks During Construction?](#why-does-it-use-iburpextendercallbacks-during-construction)
     - [Burp-Exceptions](#burp-exceptions)
 - [Usage](#usage)
 - [Examples](#examples)
@@ -22,7 +22,7 @@ There are several ways to use BurpUtils
     2. The directory should look like `burp-module-directory\burputils`.
     3. Import it with `from burputils import BurpUtils`.
 2. Local Module:
-    1. Copy the files in the top path (e.g., `burputils.py`, `headers.py` etc.) to your extensions directory.
+    1. Clone this repository into your extensions directory.
     2. Import it with `from burputils import BurpUtils`.
 3. Copy/paste used code into your extension.
     1. Import it however.
@@ -34,11 +34,12 @@ There are several ways to use BurpUtils
 * Option 2: If you want your extension to be self-sufficient.
 * Option 3: Uf you are only using a few utility functions.
 
-### Why Does It Use IExtensionHelpers During Construction?
-Burp only allows you to get an instance of that class through callbacks.
+### Why Does It Use IBurpExtenderCallbacks During Construction?
+Burp only allows you to get an instance of IExtensionHelpers and this class
+through the callbacks object.
 
 By using it during constructions, both BurpUtils and your extension can use
-them like `utils.burpHelper.buildHttpMessage`.
+them like `utils.helpers.buildHttpMessage`.
 
 ### Burp-Exceptions
 BurpUtils does not need it but you should use it for extension development:
@@ -52,8 +53,7 @@ extension.
 ``` python
 def registerExtenderCallbacks(self, callbacks):
     # obtain an extension helpers object
-    # self.helpers = callbacks.getHelpers()
-    self.utils = BurpUtils(callbacks.getHelpers())
+    self.utils = BurpUtils(callbacks)
 ```
 
 Inside the extension methods (e.g. `processHttpMessage`) use `self.utils`.
@@ -86,8 +86,8 @@ def processHttpMessage(self, toolFlag, messageIsRequest, messageInfo):
     # same method can be used to get request body bytes
     bodyBytes = self.utils.getBody(messageIsRequest, messageInfo)
     # build message
-    # we can call Burp helpers with "self.utils.burpHelper"
-    modifiedmsg = self.utils.burpHelper.buildHttpMessage(respHeaderFromUtils, bodyBytes)
+    # we can call Burp helpers with "self.utils.helpers"
+    modifiedmsg = self.utils.helpers.buildHttpMessage(respHeaderFromUtils, bodyBytes)
 
     # set modified message response
     self.utils.setRequestResponse(messageIsRequest, modifiedmsg, messageInfo)

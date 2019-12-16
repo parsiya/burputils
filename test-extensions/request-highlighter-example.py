@@ -33,7 +33,7 @@ class BurpExtender(IBurpExtender, IHttpListener):
     def registerExtenderCallbacks(self, callbacks):
         # obtain an extension helpers object
         # self.helpers = callbacks.getHelpers()
-        self.utils = BurpUtils(callbacks.getHelpers())
+        self.utils = BurpUtils(callbacks)
 
         # support for burp-exceptions
         try:
@@ -69,7 +69,7 @@ class BurpExtender(IBurpExtender, IHttpListener):
         # put everything back together
         bodyBytes = self.utils.getBody(messageIsRequest, messageInfo)
         # build message
-        modifiedmsg = self.utils.burpHelper.buildHttpMessage(utilHeaders.exportRaw(), bodyBytes)
+        modifiedmsg = self.utils.helpers.buildHttpMessage(utilHeaders.exportRaw(), bodyBytes)
 
         # set modified message response
         modifiedmsg = self.utils.setRequestResponse(messageIsRequest, modifiedmsg, messageInfo)

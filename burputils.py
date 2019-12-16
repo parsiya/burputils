@@ -19,12 +19,13 @@
 class BurpUtils:
     """Helpers for Burp Python extensions"""
 
-    def __init__(self, callbackHelper):
+    def __init__(self, callbacks):
         """Set IExtensionHelpers
         
         Set with callbacks.getHelpers() in registerExtenderCallbacks.
         """
-        self.burpHelper = callbackHelper
+        self.helpers = callbacks.getHelpers()
+        self.callbacks = callbacks
     
     def getInfoFromBytes(self, isRequest, rawBytes):
         """Process request or response from raw bytes.
@@ -41,9 +42,9 @@ class BurpUtils:
         * rawBytes (byte[]): Raw bytes containing the request or response.
         """
         if isRequest:
-            return self.burpHelper.analyzeRequest(rawBytes)
+            return self.helpers.analyzeRequest(rawBytes)
         else:
-            return self.burpHelper.analyzeResponse(rawBytes)
+            return self.helpers.analyzeResponse(rawBytes)
     
     def getInfo(self, isRequest, requestResponse):
         """Process request or response from IHttpRequestResponse.
@@ -59,9 +60,9 @@ class BurpUtils:
             or the response.
         """
         if isRequest:
-            return self.burpHelper.analyzeRequest(requestResponse)
+            return self.helpers.analyzeRequest(requestResponse)
         else:
-            return self.burpHelper.analyzeResponse(requestResponse.getResponse())
+            return self.helpers.analyzeResponse(requestResponse.getResponse())
     
     def getBodyFromBytes(self, isRequest, rawBytes):
         """Extracts the body bytes from a request or response raw bytes.
@@ -188,7 +189,7 @@ class BurpUtils:
         Args:
         
         * data (bytearray): Byte array to be converted to string."""
-        return self.burpHelper.bytesToString(data)
+        return self.helpers.bytesToString(data)
 
     def getPath(self, reqResp):
         # type: (IHttpRequestResponse) -> (str)
@@ -199,5 +200,15 @@ class BurpUtils:
         * reqResp (IHttpRequestResponse): The RequestResponse with the path."""
         if reqResp is None:
             return ""
-        info = self.burpHelper.analyzeRequest(reqResp)
+        info = self.helpers.analyzeRequest(reqResp)
         return info.getUrl().getFile()
+
+    def burpToolName(self, toolFlag):
+        # type: (int) -> (str)
+        """Returns the descriptive name for the Burp tool identified by
+        toolFlag.
+        
+        Args:
+        
+        * toolFlag (int): The flag representing the Burp tool."""
+        return self.callbacks.getToolName(toolFlag)
